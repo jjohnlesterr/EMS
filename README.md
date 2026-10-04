@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EMS — Employee Management System
 
-## Getting Started
-
-First, run the development server:
+Frontend for the EMS web app, built from the Figma file *ITPE 2 – John Lester Tan*
+(Employee screens: **FINALIZED EMPLOYEE SIDE UI**; Manager screens: **REVISED DESIGN**).
+Admin is out of scope for now.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # http://localhost:3000
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Mock login
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Data is mocked in `src/lib/mock-data.ts` and held in memory by `src/lib/store.tsx`
+(changes persist while you navigate, and reset on reload).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Temporary mock auth** (`src/lib/auth.ts`): any non-empty username/email and password
+signs in and redirects to `/employee/dashboard`. Empty fields still show required errors.
+The Manager area is reachable directly at `/manager/dashboard`. Replace `signIn()` when real
+authentication is added.
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/app/(auth)/        login, activate, setup
+src/app/(app)/         employee/* and manager/* (shared mock store + AppShell)
+src/components/ui/     primitives: Button, Field, Modal, ConfirmDialog, StatusBadge, MenuSelect, Tabs, Pagination…
+src/components/layout/ AppShell, Sidebar, PageHeader, UserMenu, NotificationMenu, AuthShell
+src/components/data/   StatCard, DataTable, Toolbar, SectionCard, CountTile, table cells
+src/features/          screens + domain components (tasks, leave, attendance, announcements, profile, employees)
+src/lib/               tokens-adjacent config: status → badge map, nav, types, list hook, formatting
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Design tokens live in `src/app/globals.css` (`@theme`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Replacing image placeholders
 
-## Deploy on Vercel
+Every image is referenced through `src/lib/assets.ts`. Until a Figma asset is exported,
+`<ImageSlot>` renders a neutral block at the Figma size (inspect it: `data-placeholder="<key>"`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Export the asset from Figma (node ids are listed in `assets.ts`) into `public/figma/`.
+2. Set `src: "/figma/<file>"` on that entry. No component changes needed.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Avatars use `<Avatar src>`; add an `avatar` path to a person in `mock-data.ts` to show a photo.
