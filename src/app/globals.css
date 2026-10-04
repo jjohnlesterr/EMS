@@ -1,90 +1,91 @@
 @import "tailwindcss";
 
+/*
+ * EMS design tokens.
+ * Named values come from Figma variables; the rest were sampled from the
+ * finalized Figma screens (see src/lib/assets.ts for image placeholders).
+ */
+@theme {
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-merriweather), ui-serif, Georgia, serif;
+
+  /* Brand */
+  --color-navy: #072445;
+  --color-primary: #0b6afe; /* Foundation/Blue/Light */
+  --color-primary-dark: #0047aa; /* Foundation/Blue/Dark */
+  --color-primary-active: #1276f0; /* active nav + pagination */
+  --color-primary-soft: #e8f0fe;
+
+  /* Accents (Figma variables) */
+  --color-green: #34c759;
+  --color-orange: #ff8d28;
+  --color-cyan: #00c0e8;
+  --color-red: #ff383c;
+  --color-blue: #0088ff;
+  --color-gray: #8e8e93;
+
+  /* Surfaces */
+  --color-page: #f9f9fb;
+  --color-line: #dde0e5;
+  --color-line-soft: #eaecf2;
+  --color-table-head: #fafafb;
+  --color-ink: #000000;
+  --color-ink-soft: #3c3c43;
+
+  /* Stat card tints */
+  --color-tint-blue: #f6f9fe;
+  --color-tint-green: #f8fcfa;
+  --color-tint-orange: #fefaf5;
+  --color-tint-cyan: #f8fcfc;
+  --color-tint-red: #fef8f8;
+  --color-tint-rose: #fcefee;
+
+  /* Status badges */
+  --color-st-present: #13a06c;
+  --color-st-absent: #f4464a;
+  --color-st-leave: #0460fb;
+  --color-st-late: #feb861;
+  --color-st-progress: #ffcc00;
+  --color-st-progress-edge: #bf9900;
+  --color-st-done-edge: #279543;
+  --color-st-todo: #b0cdf6;
+  --color-st-todo-edge: #6e809a;
+
+  /* Neutral fill for image slots whose Figma asset is not exported yet */
+  --color-placeholder: #e4e8ee;
+  --color-placeholder-ink: #a3abb8;
+
+  --radius-card: 10px;
+  --radius-panel: 20px;
+
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 2px 8px rgb(16 24 40 / 0.04);
+  --shadow-pop: 0 12px 32px rgb(16 24 40 / 0.16);
+}
+
 @layer base {
-  :root {
-    --font-display: var(--font-space-grotesk), sans-serif;
-    --font-body: var(--font-plus-jakarta), sans-serif;
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: #05070d;
-    color: #f1f5f9;
-    font-family: var(--font-body);
-    overflow-x: hidden;
+    background-color: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
   }
 
-  h1, h2, h3, h4, .font-display {
-    font-family: var(--font-display);
-    letter-spacing: -0.02em;
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
-/* Glassmorphism & Neon Tech Utilities */
-.glass-card {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
 }
-
-.glass-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.glass-card-hover:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  transform: translateY(-4px);
-  box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.25);
-}
-
-.text-gradient-cyan-purple {
-  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gradient-gold {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.neon-glow-cyan {
-  box-shadow: 0 0 50px -10px rgba(56, 189, 248, 0.35);
-}
-
-.neon-glow-purple {
-  box-shadow: 0 0 60px -10px rgba(192, 132, 252, 0.3);
-}
-
-.tech-grid-bg {
-  background-image: radial-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Animated Shimmer */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-shimmer {
-  animation: shimmer 2.5s infinite;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #05070d;
-}
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-
