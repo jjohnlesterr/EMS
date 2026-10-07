@@ -38,7 +38,7 @@ export function AppShell({ role, children }: { role: Role; children: ReactNode }
             >
               <Menu className="size-6" />
             </button>
-            <ImageSlot asset="sidebarLogo" tone="dark" className="size-8 rounded" />
+            <ImageSlot asset="sidebarLogo" fit="contain" tone="dark" className="size-9" />
           </div>
 
           <main className="mx-auto flex w-full max-w-[1560px] flex-1 flex-col gap-3.5 px-3 pt-3 pb-5 sm:px-4 lg:px-5 2xl:gap-4 2xl:px-6">{children}</main>

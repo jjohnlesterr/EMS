@@ -17,7 +17,7 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-/** Navy sidebar from the finalized Employee UI, shared by every role. */
+/** Navy sidebar shared by every role; the Manager variant adds its patterned background art. */
 export function Sidebar({ role, onLogout, open, onClose }: SidebarProps) {
   const pathname = usePathname();
 
@@ -26,11 +26,13 @@ export function Sidebar({ role, onLogout, open, onClose }: SidebarProps) {
       {open && <div aria-hidden className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={onClose} />}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[248px] flex-col bg-navy text-white transition-transform duration-200 lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:w-[200px] lg:translate-x-0 2xl:w-[220px]",
+          "fixed inset-y-0 left-0 z-50 isolate flex w-[248px] flex-col bg-navy text-white transition-transform duration-200 lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:w-[200px] lg:translate-x-0 2xl:w-[220px]",
           open ? "translate-x-0" : "-translate-x-full",
         )}
         aria-label="Sidebar"
       >
+        {role === "manager" && <ImageSlot asset="managerSidebar" tone="none" className="absolute inset-0 -z-10" priority />}
+
         <button
           type="button"
           onClick={onClose}
@@ -40,11 +42,13 @@ export function Sidebar({ role, onLogout, open, onClose }: SidebarProps) {
           <X className="size-6" />
         </button>
 
-        <Link href={NAV_ITEMS[role][0].href} className="mx-auto mt-5 block 2xl:mt-6" aria-label="EMS home">
-          <ImageSlot asset="sidebarLogo" tone="dark" className="size-[76px] rounded-lg 2xl:size-[88px]" />
-        </Link>
+        <div className="mx-3 flex justify-center border-b border-white/15 pt-5 pb-4 2xl:mx-4 2xl:pt-6 2xl:pb-5">
+          <Link href={NAV_ITEMS[role][0].href} className="block rounded-lg" aria-label="EMS home">
+            <ImageSlot asset="sidebarLogo" fit="contain" tone="dark" className="size-[108px] 2xl:size-[120px]" priority />
+          </Link>
+        </div>
 
-        <nav className="mt-6 flex-1 overflow-y-auto px-3 2xl:px-4" aria-label="Main">
+        <nav className="mt-4 flex-1 overflow-y-auto px-3 2xl:px-4" aria-label="Main">
           <ul className="flex flex-col gap-1">
             {NAV_ITEMS[role].map((item) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
