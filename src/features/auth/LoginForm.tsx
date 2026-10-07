@@ -8,69 +8,70 @@ import { Button } from "@/components/ui/Button";
 import { Field, TextInput } from "@/components/ui/Field";
 import { signIn } from "@/lib/auth";
 import { roleHome } from "@/lib/nav";
+import { useFieldErrors } from "./useFieldErrors";
 
 export function LoginForm() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
+  const { shown, touch, attempt } = useFieldErrors({
+    username: username.trim() ? undefined : "Please enter your username or company email.",
+    password: password ? undefined : "Please enter your password.",
+  });
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    const id = username.trim();
-    const next: typeof errors = {};
-    if (!id) next.username = "Please enter your username or company email.";
-    if (!password) next.password = "Please enter your password.";
-    setErrors(next);
-    if (next.username || next.password) return;
+    if (!attempt()) return;
 
     // Mock auth (src/lib/auth.ts): any non-empty credentials succeed.
-    const result = await signIn(id, password);
+    const result = await signIn(username.trim(), password);
     router.push(roleHome(result.role));
   }
 
   return (
-    <form onSubmit={submit} noValidate className="flex flex-col gap-3.5">
-      <Field label="Username/ Company Email" error={errors.username}>
+    <form onSubmit={submit} noValidate className="flex flex-col gap-3">
+      <Field label={<span className="sm:text-[13px]">Username/ Company Email</span>} error={shown("username")}>
         {({ id, describedBy, invalid }) => (
           <TextInput
             id={id}
-            inputSize="lg"
+            inputSize="xl"
             icon={<CircleUserRound />}
             placeholder="Enter your employee ID"
             autoComplete="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            onBlur={touch("username")}
             aria-describedby={describedBy}
             invalid={invalid}
           />
         )}
       </Field>
-      <Field label="Password" error={errors.password}>
+      <Field label={<span className="sm:text-[13px]">Password</span>} error={shown("password")}>
         {({ id, describedBy, invalid }) => (
           <TextInput
             id={id}
             type="password"
-            inputSize="lg"
+            inputSize="xl"
             icon={<Lock />}
             placeholder="Enter your password"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={touch("password")}
             aria-describedby={describedBy}
             invalid={invalid}
           />
         )}
       </Field>
-      <Link href="/login" className="-mt-1.5 self-start text-xs text-primary-dark hover:underline">
+      <Link href="/login" className="-mt-1 self-start text-[13px] text-primary hover:underline">
         Forgot Password?
       </Link>
-      <Button type="submit" className="mx-auto mt-1 w-[180px]">
+      <Button type="submit" className="mx-auto mt-1 h-11! w-full sm:h-10! sm:w-[202px]">
         Login
       </Button>
-      <p className="text-center text-xs text-black">
+      <p className="mt-2 text-center text-[13px] text-black">
         Don&apos;t have an account?{" "}
-        <Link href="/activate" className="text-primary-dark hover:underline">
+        <Link href="/activate" className="text-primary hover:underline">
           Activate Account
         </Link>
       </p>
