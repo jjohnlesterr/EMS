@@ -20,24 +20,58 @@ export interface AssetSpec {
 }
 
 export const ASSETS = {
-  /** White EMS logo shown in the sidebar. */
-  sidebarLogo: { alt: "EMS — Employee Management System", figmaNode: "Sidebar (223:3428)", width: 186, height: 186 },
-  /** Navy EMS logo + tagline on the login / activate left panel. */
-  authLogo: { alt: "EMS — Employee Management System. Manage. Empower. Succeed.", figmaNode: "5:618", width: 420, height: 380 },
-  /** Blurred office photo behind the auth card. */
-  authBackground: { alt: "", figmaNode: "17:77 Background", width: 1512, height: 982 },
-  /** Left panel photo of the login card (desk + laptop). */
-  authPanelLogin: { alt: "", figmaNode: "5:684", width: 605, height: 700 },
-  /** Left panel illustration of First Time Setup. */
-  authPanelSetup: { alt: "", figmaNode: "58:809", width: 605, height: 700 },
-  /** 3D user badge above "Welcome Back!". */
-  authIconLogin: { alt: "", figmaNode: "16:149 icon", width: 150, height: 150 },
-  /** 3D envelope/ID icon above "Activate Account". */
-  authIconActivate: { alt: "", figmaNode: "16:149 icon", width: 150, height: 150 },
+  /** White EMS logo (transparent) shown in the sidebar and mobile top bar. */
+  sidebarLogo: {
+    src: "/images/login/logo.png",
+    alt: "EMS — Employee Management System",
+    figmaNode: "Sidebar (223:3428)",
+    width: 200,
+    height: 200,
+  },
+  /** 3D verified-user icon above "Welcome Back!". */
+  authIconLogin: { src: "/images/login/login-icon.png", alt: "", figmaNode: "16:149 icon", width: 163, height: 160 },
+  /**
+   * Full Login frame. The export includes the card itself: 1212×700, centered
+   * horizontally, its center 9px below the frame center.
+   */
+  loginBackground: { src: "/images/login/loginbg.png", alt: "", width: 1512, height: 982 },
+  /** Left panel of the Login card (EMS logo over desk + laptop). */
+  loginHero: {
+    src: "/images/login/login-hero.png",
+    alt: "EMS — Employee Management System. Manage. Empower. Succeed.",
+    width: 606,
+    height: 700,
+  },
+  /** 3D ID badge above "Activate Your Account". */
+  authIconActivate: { src: "/images/login/activate-icon.png", alt: "", figmaNode: "16:149 icon", width: 137, height: 160 },
+  /**
+   * Full Activate Account frame. The export includes the card itself, centered
+   * at 1212×700 in the 1512×982 frame; the activate page covers it exactly.
+   */
+  activateBackground: { src: "/images/login/activatebg.png", alt: "", width: 1512, height: 982 },
+  /** Left panel of the Activate Account card (dashboard illustration). */
+  activateHero: {
+    src: "/images/login/activate-hero.png",
+    alt: "Employees reviewing the EMS dashboard: profile, attendance, tasks, announcements, leave requests and security. Manage. Empower. Succeed.",
+    width: 606,
+    height: 700,
+  },
   /** Shield + key icon above "First Time Setup". */
-  authIconSetup: { alt: "", figmaNode: "16:149 icon", width: 150, height: 150 },
-  /** Light blue abstract banner behind each page header. */
-  headerBanner: { alt: "", figmaNode: "image/banner2", width: 1171, height: 148 },
+  authIconSetup: { src: "/images/login/first-time-icon.png", alt: "", figmaNode: "16:149 icon", width: 163, height: 135 },
+  /** Left panel of the First Time Setup card (same illustration as Activate). */
+  setupHero: {
+    src: "/images/login/first-time.png",
+    alt: "Employees reviewing the EMS dashboard: profile, attendance, tasks, announcements, leave requests and security. Manage. Empower. Succeed.",
+    figmaNode: "58:809",
+    width: 606,
+    height: 700,
+  },
+  /** Light blue wave banner behind each Employee page header. */
+  employeeBanner: { src: "/images/login/employee-banner.png", alt: "", figmaNode: "image/banner2", width: 1171, height: 148 },
+  /** Blue angular banner behind each Manager page header. */
+  managerBanner: { src: "/images/login/manager-banner.png", alt: "", width: 1171, height: 148 },
+  /** Patterned navy background of the Manager sidebar. */
+  managerSidebar: { src: "/images/login/manager-sidebar.png", alt: "", width: 642, height: 1536 },
   /** Illustration on the "Create Leave Request" card. */
   leaveIllustration: { alt: "", figmaNode: "205:3555", width: 122, height: 126 },
 } satisfies Record<string, AssetSpec>;
