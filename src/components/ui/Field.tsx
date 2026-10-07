@@ -11,6 +11,8 @@ interface FieldProps {
   required?: boolean;
   optional?: boolean;
   error?: string;
+  /** Extra lines listed under the error message (e.g. unmet password requirements). */
+  errorDetails?: string[];
   hint?: ReactNode;
   className?: string;
   /** Receives the generated id so the control can be linked to the label. */
@@ -18,7 +20,7 @@ interface FieldProps {
 }
 
 /** Label + control + error message, wired for accessibility. */
-export function Field({ label, required, optional, error, hint, className, children }: FieldProps) {
+export function Field({ label, required, optional, error, errorDetails, hint, className, children }: FieldProps) {
   const id = useId();
   const errorId = `${id}-error`;
   return (
@@ -32,10 +34,21 @@ export function Field({ label, required, optional, error, hint, className, child
       )}
       {children({ id, describedBy: error ? errorId : undefined, invalid: Boolean(error) })}
       {error ? (
-        <p id={errorId} role="alert" className="flex items-center gap-1 text-xs text-red">
-          <CircleAlert className="size-3.5 shrink-0" aria-hidden />
-          {error}
-        </p>
+        <div id={errorId} role="alert" className="-mt-0.5 text-xs leading-4 text-red">
+          <p className="flex items-center gap-1">
+            <CircleAlert className="size-3.5 shrink-0 fill-red text-white" aria-hidden />
+            {error}
+          </p>
+          {errorDetails && errorDetails.length > 0 && (
+            <ul className="pl-[18px]">
+              {errorDetails.map((d) => (
+                <li key={d} className="before:mr-1.5 before:content-['•']">
+                  {d}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       ) : (
         hint
       )}
@@ -44,26 +57,34 @@ export function Field({ label, required, optional, error, hint, className, child
 }
 
 const controlBase =
-  "w-full rounded-lg border bg-white text-[13px] text-black placeholder:text-gray outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:bg-[#e9e9eb] disabled:text-gray read-only:bg-white";
+  "w-full rounded-lg border bg-white text-[13px] text-black placeholder:text-gray outline-none transition-colors focus:ring-2 disabled:bg-[#e9e9eb] disabled:text-gray read-only:bg-white";
 
-const borderState = (invalid?: boolean) => (invalid ? "border-red" : "border-gray");
+const borderState = (invalid?: boolean) =>
+  invalid ? "border-red focus:ring-red/15" : "border-gray focus:border-primary focus:ring-primary/15";
 
 /* ----------------------------- TextInput ----------------------------- */
 
 interface TextInputProps extends Omit<ComponentProps<"input">, "size"> {
   icon?: ReactNode;
   invalid?: boolean;
-  /** Field height: "lg" is the 60px auth input, "md" the 40px form input. */
-  inputSize?: "md" | "lg";
+  /** Field height: "xl" the 60px Figma auth input, "lg" 40px auth input, "md" 36px form input. */
+  inputSize?: "md" | "lg" | "xl";
 }
+
+const INPUT_SIZES = {
+  md: { input: "h-9", icon: "left-3 [&_svg]:size-[18px]", pad: "pl-10", toggle: "right-3 [&_svg]:size-[18px]", padEnd: "pr-10" },
+  lg: { input: "h-10 text-[13px]", icon: "left-3 [&_svg]:size-[18px]", pad: "pl-10", toggle: "right-3 [&_svg]:size-[18px]", padEnd: "pr-10" },
+  xl: { input: "h-[52px] sm:h-[60px]", icon: "left-4 [&_svg]:size-6", pad: "pl-[50px]", toggle: "right-4 [&_svg]:size-6", padEnd: "pr-12" },
+};
 
 export function TextInput({ icon, invalid, inputSize = "md", className, type = "text", ...props }: TextInputProps) {
   const [reveal, setReveal] = useState(false);
   const isPassword = type === "password";
+  const size = INPUT_SIZES[inputSize];
   return (
     <div className="relative">
       {icon && (
-        <span aria-hidden className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-black [&_svg]:size-[18px]">
+        <span aria-hidden className={cn("pointer-events-none absolute top-1/2 -translate-y-1/2 text-black", size.icon)}>
           {icon}
         </span>
       )}
@@ -73,9 +94,9 @@ export function TextInput({ icon, invalid, inputSize = "md", className, type = "
         className={cn(
           controlBase,
           borderState(invalid),
-          inputSize === "lg" ? "h-10 text-[13px]" : "h-9",
-          icon ? "pl-10" : "pl-3",
-          isPassword ? "pr-10" : "pr-3",
+          size.input,
+          icon ? size.pad : "pl-3",
+          isPassword ? size.padEnd : "pr-3",
           className,
         )}
         {...props}
@@ -84,10 +105,12 @@ export function TextInput({ icon, invalid, inputSize = "md", className, type = "
         <button
           type="button"
           onClick={() => setReveal((v) => !v)}
+          // Keep focus (and the blur-triggered validation) on the input.
+          onMouseDown={(e) => e.preventDefault()}
           aria-label={reveal ? "Hide password" : "Show password"}
-          className="absolute top-1/2 right-3 -translate-y-1/2 text-gray hover:text-black"
+          className={cn("absolute top-1/2 -translate-y-1/2 text-gray hover:text-black", size.toggle)}
         >
-          {reveal ? <Eye className="size-[18px]" /> : <EyeOff className="size-[18px]" />}
+          {reveal ? <Eye /> : <EyeOff />}
         </button>
       )}
     </div>

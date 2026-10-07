@@ -5,6 +5,13 @@
  * Named values come from Figma variables; the rest were sampled from the
  * finalized Figma screens (see src/lib/assets.ts for image placeholders).
  */
+/*
+ * Landscape viewports where the full-frame auth layout (1512×982 Figma frame
+ * scaled to cover) fits on screen: narrower ones overflow horizontally,
+ * wider ones (ultrawide / short windows) overflow vertically.
+ */
+@custom-variant frame (@media (min-width: 64rem) and (min-aspect-ratio: 4/3) and (max-aspect-ratio: 2/1));
+
 @theme {
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-merriweather), ui-serif, Georgia, serif;
